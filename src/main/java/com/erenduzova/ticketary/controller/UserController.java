@@ -21,6 +21,12 @@ public class UserController {
         return userService.create(userRequest);
     }
 
+    // Get User By Id
+    @GetMapping(name = "/{userId}")
+    public UserResponse getResponseById(@PathVariable Long userId) {
+        return userService.getResponseById(userId);
+    }
+
     // Get All Users
     @GetMapping
     public List<UserResponse> getAll() {
