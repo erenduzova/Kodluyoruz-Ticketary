@@ -25,14 +25,14 @@ public class UserConverter {
         return userResponse;
     }
 
-    public User convert(UserRequest userRequest) {
+    public User convert(UserRequest userRequest, String hashedPassword) {
         User user = new User();
         user.setFirstName(userRequest.getFirstName());
         user.setLastName(userRequest.getLastName());
         user.setEmail(userRequest.getEmail());
         user.setEmail(userRequest.getEmail());
         user.setPhone(userRequest.getPhone());
-        user.setPassword(userRequest.getPassword());
+        user.setPassword(hashedPassword);
         user.setGender(userRequest.getGender());
         user.setType(userRequest.getType());
         user.setBoughtTickets(List.of());

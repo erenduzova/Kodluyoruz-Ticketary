@@ -1,15 +1,18 @@
 package com.erenduzova.ticketary.service;
 
 import com.erenduzova.ticketary.dto.converter.UserConverter;
+import com.erenduzova.ticketary.dto.model.request.LoginRequest;
 import com.erenduzova.ticketary.dto.model.request.UserRequest;
 import com.erenduzova.ticketary.dto.model.response.UserResponse;
 import com.erenduzova.ticketary.entity.User;
+import com.erenduzova.ticketary.exception.UserNotFoundException;
 import com.erenduzova.ticketary.repository.UserRepository;
+import com.erenduzova.ticketary.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 @Service
@@ -22,10 +25,19 @@ public class UserService {
     private UserConverter userConverter;
 
     // Create And Save New User
-    public UserResponse create(UserRequest userRequest) {
-        User newUser = userConverter.convert(userRequest);
+    // TODO: Send mail after save
+    public UserResponse create(UserRequest userRequest) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        String hashedPassword = PasswordUtil.hashPassword(userRequest.getPassword());
+        User newUser = userConverter.convert(userRequest, hashedPassword);
         userRepository.save(newUser);
         return userConverter.convert(newUser);
+    }
+
+    // User Login
+    public String login(LoginRequest loginRequest) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        User foundUser = findByEmail(loginRequest.getEmail());
+        boolean isValid = PasswordUtil.validatePassword(loginRequest.getPassword(), foundUser.getPassword());
+        return isValid ? "Successful Login" : "Login Failed!";
     }
 
     // Get All Users
@@ -34,14 +46,20 @@ public class UserService {
     }
 
     // Get User By Id
-    // TODO: Edit Exception
     public User findById(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with this id: " + userId));
+                .orElseThrow(() -> new UserNotFoundException("User not found with this id: " + userId));
+    }
+
+    // Get User By Email
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found with this email: " + email));
     }
 
     // Get UserResponse By Id
     public UserResponse getResponseById(Long userId) {
         return userConverter.convert(findById(userId));
     }
+
 }
