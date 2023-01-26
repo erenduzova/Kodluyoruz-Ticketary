@@ -1,6 +1,7 @@
 package com.erenduzova.ticketary.entity;
 
 import com.erenduzova.ticketary.entity.enums.City;
+import com.erenduzova.ticketary.entity.enums.TravelStatus;
 import com.erenduzova.ticketary.entity.enums.VehicleType;
 import jakarta.persistence.*;
 
@@ -28,6 +29,8 @@ public class Travel {
     private long fareCents;
     @Column(name = "travel_date")
     private LocalDateTime travelDate;
+    @Column(name = "travel_status")
+    private TravelStatus travelStatus;
 
     public Travel() {
     }
@@ -103,5 +106,13 @@ public class Travel {
 
     public void setTravelDate(LocalDateTime travelDate) {
         this.travelDate = travelDate;
+    }
+
+    public TravelStatus getTravelStatus() {
+        return travelStatus;
+    }
+
+    public void setTravelStatus(TravelStatus travelStatus) {
+        this.travelStatus = travelStatus;
     }
 }
