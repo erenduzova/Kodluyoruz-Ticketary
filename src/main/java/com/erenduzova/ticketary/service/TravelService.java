@@ -35,9 +35,19 @@ public class TravelService {
                 .orElseThrow(() -> new TravelNotFoundException("Travel not found with this id: " + travelId));
     }
 
+    // Get TravelResponse By Id
+    public TravelResponse getById(Long travelId) {
+        return travelConverter.convert(getTravelById(travelId));
+    }
+
     // Get All Travel Responses
     public List<TravelResponse> getAll() {
         return travelConverter.convert(travelRepository.findAll());
+    }
+
+    // Get TravelResponse By Id - Admin
+    public AdminTravelResponse getByIdAdmin(Long travelId) {
+        return travelConverter.convertAdmin(getTravelById(travelId));
     }
 
     // Get All Travel Responses - Admin
