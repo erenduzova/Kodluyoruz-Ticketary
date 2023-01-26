@@ -53,7 +53,7 @@ public class TravelConverter {
         adminTravelResponse.setSoldTickets(travel.getSoldTickets());
         adminTravelResponse.setSoldTicketsCount(travel.getSoldTickets().size());
         adminTravelResponse.setFareCents(travel.getFareCents());
-        adminTravelResponse.setTotalIncome(findTotalIncome(travel.getFareCents(), travel.getCapacity()));
+        adminTravelResponse.setTotalIncome(findTotalIncome(travel.getFareCents(), travel.getSoldTickets().size()));
         adminTravelResponse.setTravelDate(travel.getTravelDate());
         adminTravelResponse.setTravelStatus(travel.getTravelStatus());
         return adminTravelResponse;
@@ -73,8 +73,9 @@ public class TravelConverter {
         return vehicleCapacity;
     }
 
-    private BigDecimal findTotalIncome(long fareCents, int capacity) {
-        long totalCents = capacity * fareCents;
+    // Find Total Income
+    private BigDecimal findTotalIncome(long fareCents, long soldTicketCount) {
+        long totalCents = soldTicketCount * fareCents;
         return new BigDecimal(totalCents).movePointLeft(2);
     }
 
