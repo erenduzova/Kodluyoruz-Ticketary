@@ -4,6 +4,7 @@ import com.erenduzova.ticketary.dto.model.request.TravelRequest;
 import com.erenduzova.ticketary.dto.model.response.AdminTravelResponse;
 import com.erenduzova.ticketary.dto.model.response.TravelResponse;
 import com.erenduzova.ticketary.entity.enums.City;
+import com.erenduzova.ticketary.entity.enums.VehicleType;
 import com.erenduzova.ticketary.service.TravelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -58,11 +59,17 @@ public class TravelController {
     }
 
     // Search Travel By City
-    @GetMapping(value = "/search/{cityName}")
+    @GetMapping(value = "/search/city/{cityName}")
     public ResponseEntity<List<TravelResponse>> searchByCity(@PathVariable String cityName) {
         // TODO : Find better way to format string and use other necessary places
         String searchedCity = cityName.replaceAll("\\s", "").toUpperCase();
         return ResponseEntity.ok(travelService.searchByCity(City.valueOf(searchedCity)));
+    }
+
+    // Search Travel By Vehicle Type
+    @GetMapping(value = "/search/vehicle/{vehicleType}")
+    public ResponseEntity<List<TravelResponse>> searchByVehicleType(@PathVariable String vehicleType) {
+        return ResponseEntity.ok(travelService.searchByVehicleType(VehicleType.valueOf(vehicleType)));
     }
 
 

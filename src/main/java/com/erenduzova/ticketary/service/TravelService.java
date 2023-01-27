@@ -7,6 +7,7 @@ import com.erenduzova.ticketary.dto.model.response.TravelResponse;
 import com.erenduzova.ticketary.entity.Travel;
 import com.erenduzova.ticketary.entity.enums.City;
 import com.erenduzova.ticketary.entity.enums.TravelStatus;
+import com.erenduzova.ticketary.entity.enums.VehicleType;
 import com.erenduzova.ticketary.exception.TravelNotFoundException;
 import com.erenduzova.ticketary.repository.TravelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,10 +42,17 @@ public class TravelService {
     private List<Travel> getTravelsByToCity(City searchedCity) {
         return travelRepository.findAllByToCity(searchedCity);
     }
+
     // Get Travels By fromCity
     private List<Travel> getTravelsByFromCity(City searchedCity) {
         return travelRepository.findAllByFromCity(searchedCity);
     }
+
+    // Get Travels By Vehicle Type
+    private List<Travel> getTravelsByVehicleType(VehicleType searchedVehicle) {
+        return travelRepository.findAllByVehicleType(searchedVehicle);
+    }
+
     // Get TravelResponse By Id
     public TravelResponse getById(Long travelId) {
         return travelConverter.convert(getTravelById(travelId));
@@ -79,5 +87,10 @@ public class TravelService {
         List<Travel> travelsToCity = getTravelsByToCity(searchedCity);
         List<Travel> searchedTravels = Stream.concat(travelsFromCity.stream(), travelsToCity.stream()).toList();
         return travelConverter.convert(searchedTravels);
+    }
+
+    // Get Travels By Vehicle Type
+    public List<TravelResponse> searchByVehicleType(VehicleType searchedVehicle) {
+        return travelConverter.convert(getTravelsByVehicleType(searchedVehicle));
     }
 }
