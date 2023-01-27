@@ -3,6 +3,7 @@ package com.erenduzova.ticketary.controller;
 import com.erenduzova.ticketary.dto.model.request.TravelRequest;
 import com.erenduzova.ticketary.dto.model.response.AdminTravelResponse;
 import com.erenduzova.ticketary.dto.model.response.TravelResponse;
+import com.erenduzova.ticketary.entity.enums.City;
 import com.erenduzova.ticketary.service.TravelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -51,9 +52,17 @@ public class TravelController {
     }
 
     // Cancel Travel
-    @PutMapping(value = "/{travelId}")
+    @PutMapping(value = "/{travelId}/cancel")
     public ResponseEntity<AdminTravelResponse> cancelTravel(@PathVariable Long travelId) {
         return ResponseEntity.ok(travelService.cancel(travelId));
+    }
+
+    // Search Travel By City
+    @GetMapping(value = "/search/{cityName}")
+    public ResponseEntity<List<TravelResponse>> searchByCity(@PathVariable String cityName) {
+        // TODO : Find better way to format string and use other necessary places
+        String searchedCity = cityName.replaceAll("\\s", "").toUpperCase();
+        return ResponseEntity.ok(travelService.searchByCity(City.valueOf(searchedCity)));
     }
 
 

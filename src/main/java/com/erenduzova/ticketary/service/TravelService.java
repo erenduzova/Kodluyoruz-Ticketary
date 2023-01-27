@@ -5,6 +5,7 @@ import com.erenduzova.ticketary.dto.model.request.TravelRequest;
 import com.erenduzova.ticketary.dto.model.response.AdminTravelResponse;
 import com.erenduzova.ticketary.dto.model.response.TravelResponse;
 import com.erenduzova.ticketary.entity.Travel;
+import com.erenduzova.ticketary.entity.enums.City;
 import com.erenduzova.ticketary.entity.enums.TravelStatus;
 import com.erenduzova.ticketary.exception.TravelNotFoundException;
 import com.erenduzova.ticketary.repository.TravelRepository;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 public class TravelService {
@@ -35,6 +37,14 @@ public class TravelService {
                 .orElseThrow(() -> new TravelNotFoundException("Travel not found with this id: " + travelId));
     }
 
+    // Get Travels By toCity
+    private List<Travel> getTravelsByToCity(City searchedCity) {
+        return travelRepository.findAllByToCity(searchedCity);
+    }
+    // Get Travels By fromCity
+    private List<Travel> getTravelsByFromCity(City searchedCity) {
+        return travelRepository.findAllByFromCity(searchedCity);
+    }
     // Get TravelResponse By Id
     public TravelResponse getById(Long travelId) {
         return travelConverter.convert(getTravelById(travelId));
@@ -63,5 +73,11 @@ public class TravelService {
         return travelConverter.convertAdmin(travel);
     }
 
-
+    // Get Travels By City
+    public List<TravelResponse> searchByCity(City searchedCity) {
+        List<Travel> travelsFromCity = getTravelsByFromCity(searchedCity);
+        List<Travel> travelsToCity = getTravelsByToCity(searchedCity);
+        List<Travel> searchedTravels = Stream.concat(travelsFromCity.stream(), travelsToCity.stream()).toList();
+        return travelConverter.convert(searchedTravels);
+    }
 }
