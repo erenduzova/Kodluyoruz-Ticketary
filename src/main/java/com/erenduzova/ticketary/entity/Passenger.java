@@ -17,6 +17,8 @@ public class Passenger {
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
+    @Column(name = "phone")
+    private String phone;
     @Column(name = "gender")
     private Gender gender;
     @OneToMany(mappedBy = "passenger", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -25,9 +27,10 @@ public class Passenger {
     public Passenger() {
     }
 
-    public Passenger(String firstName, String lastName, Gender gender, List<Ticket> ticketList) {
+    public Passenger(String firstName, String lastName, String phone, Gender gender, List<Ticket> ticketList) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.phone = phone;
         this.gender = gender;
         this.ticketList = ticketList;
     }
@@ -54,6 +57,14 @@ public class Passenger {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public Gender getGender() {

@@ -5,6 +5,7 @@ import com.erenduzova.ticketary.entity.enums.Gender;
 public class PassengerRequest {
     private String firstName;
     private String lastName;
+    private String phone;
     private Gender gender;
 
     public String getFirstName() {
@@ -21,6 +22,14 @@ public class PassengerRequest {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public Gender getGender() {

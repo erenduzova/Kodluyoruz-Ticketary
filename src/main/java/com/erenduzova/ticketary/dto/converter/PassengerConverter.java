@@ -16,6 +16,7 @@ public class PassengerConverter {
         Passenger newPassenger = new Passenger();
         newPassenger.setFirstName(passengerRequest.getFirstName());
         newPassenger.setLastName(passengerRequest.getLastName());
+        newPassenger.setPhone(passengerRequest.getPhone());
         newPassenger.setGender(passengerRequest.getGender());
         newPassenger.setTicketList(List.of());
         return newPassenger;
@@ -25,6 +26,7 @@ public class PassengerConverter {
         PassengerResponse passengerResponse = new PassengerResponse();
         passengerResponse.setFirstName(passenger.getFirstName());
         passengerResponse.setLastName(passenger.getLastName());
+        passengerResponse.setPhone(passenger.getPhone());
         passengerResponse.setGender(passenger.getGender());
         passengerResponse.setTicketList(passenger.getTicketList());
         return passengerResponse;
