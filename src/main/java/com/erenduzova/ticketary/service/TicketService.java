@@ -49,7 +49,9 @@ public class TicketService {
         User buyer = userService.findById(buyerId);
         Travel travel = travelService.getTravelById(travelId);
         // TODO: Check req. for buying
-
+        // INDIVIDUAL user can buy max 5 ticket for same travel
+        // INDIVIDUAL user can buy max 2 MALE ticket in 1 ORDER
+        // CORPORATE user can buy max 20 ticket for same travel
         // TODO: Payment
 
         // Get or create passengers from passenger requests
@@ -60,4 +62,20 @@ public class TicketService {
         List<Ticket> ticketList = ticketRequestList.stream().map(this::create).toList();
         return ticketConverter.convert(ticketList);
     }
+
+    // INDIVIDUAL user can buy max 5 ticket for same travel
+    public boolean limitIndividualTravel() {
+        return true;
+    }
+
+    // INDIVIDUAL user can buy max 2 MALE ticket in 1 ORDER
+    public boolean limitIndividualOrderMale() {
+        return true;
+    }
+
+    // CORPORATE user can buy max 20 ticket for same travel
+    public boolean limitCorporateTravel() {
+        return true;
+    }
+
 }
