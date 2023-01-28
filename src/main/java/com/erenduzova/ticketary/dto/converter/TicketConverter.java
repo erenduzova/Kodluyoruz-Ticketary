@@ -31,7 +31,7 @@ public class TicketConverter {
     public TicketResponse convert(Ticket ticket) {
         TicketResponse ticketResponse = new TicketResponse();
         ticketResponse.setTravelResponse(travelConverter.convert(ticket.getTravel()));
-        ticketResponse.setPassengerTicketResponse(passengerConverter.convertTicketResponse(ticket.getPassenger()));
+        ticketResponse.setPassengerTicketResponse(passengerConverter.convertPassengerTicketResponse(ticket.getPassenger()));
         return ticketResponse;
     }
     public List<TicketResponse> convert(List<Ticket> ticketList) {
