@@ -33,7 +33,7 @@ public class TravelService {
     }
 
     // Get Travel By Id
-    private Travel getTravelById(Long travelId) {
+    public Travel getTravelById(Long travelId) {
         return travelRepository.findById(travelId)
                 .orElseThrow(() -> new TravelNotFoundException("Travel not found with this id: " + travelId));
     }
