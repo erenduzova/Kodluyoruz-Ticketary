@@ -17,11 +17,19 @@ public class TicketController {
     private TicketService ticketService;
 
     // Get All Tickets
+    // TODO: Add Admin control
+    // TODO: id returns null
     @GetMapping
     public ResponseEntity<List<TicketResponse>> getAll() {
         return ResponseEntity.ok(ticketService.getAll());
     }
 
+    // TODO: Add Get User's Bought Tickets
+    // Get User's Bought Tickets
+
+    // TODO: Seat Number returns faulty ( all order gets same seat number )
+    // TODO: id returns null
+    // TODO: check travel in corporate users buy requirement for max 20 ticket
     // Create Tickets
     @PostMapping(value = "/{buyerId}/{travelId}")
     public ResponseEntity<List<TicketResponse>> createTickets(@PathVariable Long buyerId,

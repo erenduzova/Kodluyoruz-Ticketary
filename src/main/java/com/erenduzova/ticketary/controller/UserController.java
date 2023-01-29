@@ -21,6 +21,8 @@ public class UserController {
     private UserService userService;
 
     // Create User
+    // TODO: Add uniqueness control ( email )
+    // TODO: Send mail after save
     @PostMapping
     public UserResponse create(@RequestBody UserRequest userRequest) throws NoSuchAlgorithmException, InvalidKeySpecException {
         return userService.create(userRequest);

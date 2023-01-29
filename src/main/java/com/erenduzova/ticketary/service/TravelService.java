@@ -78,6 +78,7 @@ public class TravelService {
     public AdminTravelResponse cancel(Long travelId) {
         Travel travel = getTravelById(travelId);
         travel.setTravelStatus(TravelStatus.CANCELLED);
+        travelRepository.save(travel);
         return travelConverter.convertAdmin(travel);
     }
 

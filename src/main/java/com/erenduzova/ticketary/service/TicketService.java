@@ -70,10 +70,12 @@ public class TicketService {
         return buyer.getBoughtTickets().stream().filter(ticket -> travel.equals(ticket.getTravel())).toList();
     }
 
+    // Create And Buy Tickets
     public List<TicketResponse> createTickets(Long buyerId, Long travelId, List<PassengerRequest> passengerRequestList) {
         // Find buyer and travel
         User buyer = userService.findById(buyerId);
         Travel travel = travelService.getTravelById(travelId);
+        // TODO: Check Travel Status ( Must be active before buying )
         // Check Requirements
         checkRequirements(buyer, travel, passengerRequestList);
         // TODO: Payment

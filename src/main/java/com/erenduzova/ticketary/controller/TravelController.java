@@ -27,41 +27,42 @@ public class TravelController {
         return ResponseEntity.ok(travelService.create(travelRequest));
     }
 
-    // Get Travel Response ( Basic Users )
+    // Get Travel Response By Id ( Basic Users )
     @GetMapping(value = "/{travelId}")
     public ResponseEntity<TravelResponse> getById(@PathVariable Long travelId) {
         return ResponseEntity.ok(travelService.getById(travelId));
     }
 
-    // Get Travels ( Basic Users )
+    // Get All Travels ( Basic Users )
     @GetMapping
     public ResponseEntity<List<TravelResponse>> getAll() {
         return ResponseEntity.ok(travelService.getAll());
     }
 
 
-    // Get Travel Response ( Admin Users )
+    // Get Travel Response By Id ( Admin Users )
     @GetMapping(value = "/detailed/{travelId}")
     public ResponseEntity<AdminTravelResponse> getByIdAdmin(@PathVariable Long travelId) {
         return ResponseEntity.ok(travelService.getByIdAdmin(travelId));
     }
 
-    // Get Travels ( Admin Users )
+    // Get All Travels ( Admin Users )
     @GetMapping(value = "/detailed")
     public ResponseEntity<List<AdminTravelResponse>> getAllAdmin() {
         return ResponseEntity.ok(travelService.getAllAdmin());
     }
 
     // Cancel Travel
+    // TODO: Check Travel Status before canceling travel
     @PutMapping(value = "/{travelId}/cancel")
     public ResponseEntity<AdminTravelResponse> cancelTravel(@PathVariable Long travelId) {
         return ResponseEntity.ok(travelService.cancel(travelId));
     }
 
     // Search Travel By City
+    // TODO : Find better way to format string to enum and use other necessary places
     @GetMapping(value = "/search/city/{cityName}")
     public ResponseEntity<List<TravelResponse>> searchByCity(@PathVariable String cityName) {
-        // TODO : Find better way to format string and use other necessary places
         String searchedCity = cityName.replaceAll("\\s", "").toUpperCase();
         return ResponseEntity.ok(travelService.searchByCity(City.valueOf(searchedCity)));
     }
@@ -72,5 +73,7 @@ public class TravelController {
         return ResponseEntity.ok(travelService.searchByVehicleType(VehicleType.valueOf(vehicleType)));
     }
 
-
+    // TODO: Add Search Travel By DateTime
+    // TODO: Make Travel Status Completed if it's time passed
+    // TODO: StackOverFlow Exception in admin endpoints after buying tickets ( null )
 }
