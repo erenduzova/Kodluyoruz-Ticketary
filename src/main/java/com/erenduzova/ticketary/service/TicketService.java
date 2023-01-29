@@ -8,6 +8,7 @@ import com.erenduzova.ticketary.entity.Passenger;
 import com.erenduzova.ticketary.entity.Ticket;
 import com.erenduzova.ticketary.entity.Travel;
 import com.erenduzova.ticketary.entity.User;
+import com.erenduzova.ticketary.entity.enums.Gender;
 import com.erenduzova.ticketary.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,10 @@ import java.util.List;
 
 @Service
 public class TicketService {
+
+    private final long INDIVIDUAL_TRAVEL_LIMIT = 5;
+    private final long INDIVIDUAL_ORDER_LIMIT_MALE = 2;
+    private final long CORPORATE_TRAVEL_LIMIT = 20;
 
     @Autowired
     private TicketRepository ticketRepository;
@@ -44,11 +49,31 @@ public class TicketService {
         return ticketConverter.convert(ticketRepository.findAll());
     }
 
+    // Get User's All Bought Ticket Responses
+    public List<TicketResponse> getAllByUserId(Long buyerId) {
+        User buyer = userService.findById(buyerId);
+        return ticketConverter.convert(buyer.getBoughtTickets());
+    }
+
+    // Get User's All Bought Tickets
+    public List<Ticket> getBoughtTicketsByUserId(Long buyerId) {
+        User buyer = userService.findById(buyerId);
+        return buyer.getBoughtTickets();
+    }
+
+    // Get User's All Bought Tickets
+    public List<Ticket> getBoughtTicketsByUserIdAndTravelId(Long buyerId, Long travelId) {
+        User buyer = userService.findById(buyerId);
+        Travel travel = travelService.getTravelById(travelId);
+        return buyer.getBoughtTickets().stream().filter(ticket -> travel.equals(ticket.getTravel())).toList();
+    }
+
     public List<TicketResponse> createTickets(Long buyerId, Long travelId, List<PassengerRequest> passengerRequestList) {
         // Find buyer and travel
         User buyer = userService.findById(buyerId);
         Travel travel = travelService.getTravelById(travelId);
         // TODO: Check req. for buying
+        // checkRequirements(buyerId, travelId, passengerRequestList);
         // INDIVIDUAL user can buy max 5 ticket for same travel
         // INDIVIDUAL user can buy max 2 MALE ticket in 1 ORDER
         // CORPORATE user can buy max 20 ticket for same travel
@@ -64,18 +89,24 @@ public class TicketService {
     }
 
     // INDIVIDUAL user can buy max 5 ticket for same travel
-    public boolean limitIndividualTravel() {
-        return true;
+    public boolean limitIndividualTravel(List<PassengerRequest> passengerRequestList, Long buyerId, Long travelId) {
+        // TODO: check all tickets this user bought for this travel
+        long boughtTicketCount = getBoughtTicketsByUserIdAndTravelId(buyerId, travelId).size();
+        long buyerLimit = INDIVIDUAL_TRAVEL_LIMIT - boughtTicketCount;
+        return passengerRequestList.size() <= buyerLimit;
     }
 
     // INDIVIDUAL user can buy max 2 MALE ticket in 1 ORDER
-    public boolean limitIndividualOrderMale() {
-        return true;
+    public boolean limitIndividualOrderMale(List<PassengerRequest> passengerRequestList) {
+        long maleCount = passengerRequestList.stream()
+                .filter(passengerRequest -> Gender.MALE.equals(passengerRequest.getGender()))
+                .count();
+        return maleCount <= INDIVIDUAL_ORDER_LIMIT_MALE;
     }
 
     // CORPORATE user can buy max 20 ticket for same travel
-    public boolean limitCorporateTravel() {
-        return true;
+    public boolean limitCorporateTravel(List<PassengerRequest> passengerRequestList) {
+        return passengerRequestList.size() <= CORPORATE_TRAVEL_LIMIT;
     }
 
 }
