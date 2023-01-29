@@ -24,8 +24,11 @@ public class TicketController {
         return ResponseEntity.ok(ticketService.getAll());
     }
 
-    // TODO: Add Get User's Bought Tickets
     // Get User's Bought Tickets
+    @GetMapping(value = "/{buyerId}")
+    public List<TicketResponse> getAllByUserId(@PathVariable Long buyerId) {
+        return ticketService.getAllByUserId(buyerId);
+    }
 
     // TODO: Seat Number returns faulty ( all order gets same seat number )
     // TODO: id returns null
