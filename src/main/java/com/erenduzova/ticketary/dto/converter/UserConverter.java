@@ -3,6 +3,7 @@ package com.erenduzova.ticketary.dto.converter;
 import com.erenduzova.ticketary.dto.model.request.UserRequest;
 import com.erenduzova.ticketary.dto.model.response.UserResponse;
 import com.erenduzova.ticketary.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -10,6 +11,9 @@ import java.util.List;
 
 @Component
 public class UserConverter {
+
+    @Autowired
+    private TicketConverter ticketConverter;
 
     public UserResponse convert(User user) {
         UserResponse userResponse = new UserResponse();
@@ -20,7 +24,7 @@ public class UserConverter {
         userResponse.setPhone(user.getPhone());
         userResponse.setGender(user.getGender());
         userResponse.setType(user.getType());
-        userResponse.setBoughtTickets(user.getBoughtTickets());
+        userResponse.setBoughtTickets(ticketConverter.convert(user.getBoughtTickets()));
         userResponse.setRegistrationDate(user.getRegistrationDate());
         return userResponse;
     }

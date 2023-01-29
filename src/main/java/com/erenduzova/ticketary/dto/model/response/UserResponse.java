@@ -1,6 +1,5 @@
 package com.erenduzova.ticketary.dto.model.response;
 
-import com.erenduzova.ticketary.entity.Ticket;
 import com.erenduzova.ticketary.entity.enums.Gender;
 import com.erenduzova.ticketary.entity.enums.UserType;
 
@@ -16,7 +15,7 @@ public class UserResponse {
     private String phone;
     private Gender gender;
     private UserType type;
-    private List<Ticket> boughtTickets;
+    private List<TicketResponse> boughtTickets;
     private LocalDateTime registrationDate;
 
     public Long getId() {
@@ -75,11 +74,11 @@ public class UserResponse {
         this.type = type;
     }
 
-    public List<Ticket> getBoughtTickets() {
+    public List<TicketResponse> getBoughtTickets() {
         return boughtTickets;
     }
 
-    public void setBoughtTickets(List<Ticket> boughtTickets) {
+    public void setBoughtTickets(List<TicketResponse> boughtTickets) {
         this.boughtTickets = boughtTickets;
     }
 
