@@ -18,7 +18,6 @@ public class TicketController {
 
     // Get All Tickets
     // TODO: Add Admin control
-    // TODO: id returns null
     @GetMapping
     public ResponseEntity<List<TicketResponse>> getAll() {
         return ResponseEntity.ok(ticketService.getAll());
@@ -26,12 +25,11 @@ public class TicketController {
 
     // Get User's Bought Tickets
     @GetMapping(value = "/{buyerId}")
-    public List<TicketResponse> getAllByUserId(@PathVariable Long buyerId) {
-        return ticketService.getAllByUserId(buyerId);
+    public ResponseEntity<List<TicketResponse>> getAllByUserId(@PathVariable Long buyerId) {
+        return ResponseEntity.ok(ticketService.getAllByUserId(buyerId));
     }
 
     // TODO: Seat Number returns faulty ( all order gets same seat number )
-    // TODO: id returns null
     // TODO: check travel in corporate users buy requirement for max 20 ticket
     // Create Tickets
     @PostMapping(value = "/{buyerId}/{travelId}")

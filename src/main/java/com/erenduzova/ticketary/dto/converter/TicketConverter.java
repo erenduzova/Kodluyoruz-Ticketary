@@ -30,6 +30,7 @@ public class TicketConverter {
 
     public TicketResponse convert(Ticket ticket) {
         TicketResponse ticketResponse = new TicketResponse();
+        ticketResponse.setId(ticket.getId());
         ticketResponse.setTravelResponse(travelConverter.convert(ticket.getTravel()));
         ticketResponse.setPassengerTicketResponse(passengerConverter.convertPassengerTicketResponse(ticket.getPassenger()));
         return ticketResponse;

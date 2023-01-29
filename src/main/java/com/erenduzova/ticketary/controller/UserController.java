@@ -16,7 +16,6 @@ import java.util.List;
 @RequestMapping(value = "/users")
 public class UserController {
 
-    // TODO: Change returns to ResponseEntity<> !!!
     @Autowired
     private UserService userService;
 
@@ -24,20 +23,20 @@ public class UserController {
     // TODO: Add uniqueness control ( email )
     // TODO: Send mail after save
     @PostMapping
-    public UserResponse create(@RequestBody UserRequest userRequest) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        return userService.create(userRequest);
+    public ResponseEntity<UserResponse> create(@RequestBody UserRequest userRequest) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        return ResponseEntity.ok(userService.create(userRequest));
     }
 
     // Get User By Id
     @GetMapping(value = "/{userId}")
-    public UserResponse getResponseById(@PathVariable Long userId) {
-        return userService.getResponseById(userId);
+    public ResponseEntity<UserResponse> getResponseById(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.getResponseById(userId));
     }
 
     // Get All Users
     @GetMapping
-    public List<UserResponse> getAll() {
-        return userService.getAll();
+    public ResponseEntity<List<UserResponse>> getAll() {
+        return ResponseEntity.ok(userService.getAll());
     }
 
     // Login
