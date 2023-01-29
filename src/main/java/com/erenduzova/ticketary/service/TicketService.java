@@ -9,6 +9,8 @@ import com.erenduzova.ticketary.entity.Ticket;
 import com.erenduzova.ticketary.entity.Travel;
 import com.erenduzova.ticketary.entity.User;
 import com.erenduzova.ticketary.entity.enums.Gender;
+import com.erenduzova.ticketary.entity.enums.UserType;
+import com.erenduzova.ticketary.exception.FailedRequirementException;
 import com.erenduzova.ticketary.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -72,11 +74,8 @@ public class TicketService {
         // Find buyer and travel
         User buyer = userService.findById(buyerId);
         Travel travel = travelService.getTravelById(travelId);
-        // TODO: Check req. for buying
-        // checkRequirements(buyerId, travelId, passengerRequestList);
-        // INDIVIDUAL user can buy max 5 ticket for same travel
-        // INDIVIDUAL user can buy max 2 MALE ticket in 1 ORDER
-        // CORPORATE user can buy max 20 ticket for same travel
+        // Check Requirements
+        checkRequirements(buyer, travel, passengerRequestList);
         // TODO: Payment
 
         // Get or create passengers from passenger requests
@@ -88,9 +87,24 @@ public class TicketService {
         return ticketConverter.convert(ticketList);
     }
 
+    // Check requirements if anything fails throw FailedRequirementException
+    private void checkRequirements(User buyer, Travel travel, List<PassengerRequest> passengerRequestList) {
+        if (UserType.INDIVIDUAL.equals(buyer.getType())) {
+            if (!limitIndividualOrderMale(passengerRequestList)) {
+                throw new FailedRequirementException("Individual user male passenger limit for order is: " + INDIVIDUAL_ORDER_LIMIT_MALE);
+            }
+            if (!limitIndividualTravel(passengerRequestList, buyer.getId(), travel.getId())) {
+                throw new FailedRequirementException("Individual user passenger limit for travel is: " + INDIVIDUAL_TRAVEL_LIMIT);
+            }
+        } else {
+            if (!limitCorporateTravel(passengerRequestList)) {
+                throw new FailedRequirementException("Corporate user ticket limit for a travel is: " + CORPORATE_TRAVEL_LIMIT);
+            }
+        }
+    }
+
     // INDIVIDUAL user can buy max 5 ticket for same travel
     public boolean limitIndividualTravel(List<PassengerRequest> passengerRequestList, Long buyerId, Long travelId) {
-        // TODO: check all tickets this user bought for this travel
         long boughtTicketCount = getBoughtTicketsByUserIdAndTravelId(buyerId, travelId).size();
         long buyerLimit = INDIVIDUAL_TRAVEL_LIMIT - boughtTicketCount;
         return passengerRequestList.size() <= buyerLimit;
