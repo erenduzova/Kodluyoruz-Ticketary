@@ -16,8 +16,6 @@ public class Ticket {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "travel_id", referencedColumnName="id")
     private Travel travel;
-    @Column(name = "seat_number")
-    private int seatNumber;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName="id")
     private User user;
@@ -28,7 +26,6 @@ public class Ticket {
     public Ticket(Passenger passenger, Travel travel, int seatNumber, User user) {
         this.passenger = passenger;
         this.travel = travel;
-        this.seatNumber = seatNumber;
         this.user = user;
     }
 
@@ -54,14 +51,6 @@ public class Ticket {
 
     public void setTravel(Travel travel) {
         this.travel = travel;
-    }
-
-    public int getSeatNumber() {
-        return seatNumber;
-    }
-
-    public void setSeatNumber(int seatNumber) {
-        this.seatNumber = seatNumber;
     }
 
     public User getUser() {

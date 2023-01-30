@@ -29,7 +29,6 @@ public class TicketController {
         return ResponseEntity.ok(ticketService.getAllByUserId(buyerId));
     }
 
-    // TODO: Seat Number returns faulty ( all order gets same seat number )
     // Create Tickets
     @PostMapping(value = "/{buyerId}/{travelId}")
     public ResponseEntity<List<TicketResponse>> createTickets(@PathVariable Long buyerId,

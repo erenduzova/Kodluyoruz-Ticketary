@@ -21,7 +21,6 @@ public class TicketConverter {
         Ticket newTicket = new Ticket();
         newTicket.setUser(ticketRequest.getBuyer());
         newTicket.setTravel(ticketRequest.getTravel());
-        newTicket.setSeatNumber(findSeat(newTicket.getTravel()));
         newTicket.setPassenger(ticketRequest.getPassenger());
         return newTicket;
     }
@@ -31,16 +30,10 @@ public class TicketConverter {
         ticketResponse.setId(ticket.getId());
         ticketResponse.setTravelResponse(convertTravelResponse(ticket.getTravel()));
         ticketResponse.setPassengerTicketResponse(passengerConverter.convertPassengerTicketResponse(ticket.getPassenger()));
-        ticketResponse.setSeatNumber(ticket.getSeatNumber());
         return ticketResponse;
     }
     public List<TicketResponse> convert(List<Ticket> ticketList) {
         return ticketList.stream().map(this::convert).toList();
-    }
-
-    // Return seat number from max capacity to 1
-    private int findSeat(Travel travel) {
-        return travel.getCapacity() - travel.getSoldTickets().size();
     }
 
     private TravelResponse convertTravelResponse(Travel travel) {
