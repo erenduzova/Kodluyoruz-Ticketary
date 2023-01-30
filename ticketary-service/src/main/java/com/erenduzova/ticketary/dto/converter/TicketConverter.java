@@ -50,6 +50,7 @@ public class TicketConverter {
         travelResponse.setToCity(travel.getToCity());
         travelResponse.setFareCents(travel.getFareCents());
         travelResponse.setTravelDate(travel.getTravelDate());
+        travelResponse.setTravelStatus(travel.getTravelStatus());
         return travelResponse;
     }
 

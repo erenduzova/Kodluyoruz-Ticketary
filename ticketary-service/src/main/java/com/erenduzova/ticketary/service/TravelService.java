@@ -74,9 +74,12 @@ public class TravelService {
     }
 
     // Cancel travel
-    // TODO: active before ?, Check status before buying ticket. If cancelled return money.
+    // TODO: If cancelled return money.
     public AdminTravelResponse cancel(Long travelId) {
         Travel travel = getTravelById(travelId);
+        if (!TravelStatus.ACTIVE.equals(travel.getTravelStatus())) {
+            throw new RuntimeException("Travel must be active to cancel.");
+        }
         travel.setTravelStatus(TravelStatus.CANCELLED);
         travelRepository.save(travel);
         return travelConverter.convertAdmin(travel);

@@ -9,6 +9,7 @@ import com.erenduzova.ticketary.entity.Ticket;
 import com.erenduzova.ticketary.entity.Travel;
 import com.erenduzova.ticketary.entity.User;
 import com.erenduzova.ticketary.entity.enums.Gender;
+import com.erenduzova.ticketary.entity.enums.TravelStatus;
 import com.erenduzova.ticketary.entity.enums.UserType;
 import com.erenduzova.ticketary.exception.FailedRequirementException;
 import com.erenduzova.ticketary.repository.TicketRepository;
@@ -75,7 +76,9 @@ public class TicketService {
         // Find buyer and travel
         User buyer = userService.findById(buyerId);
         Travel travel = travelService.getTravelById(travelId);
-        // TODO: Check Travel Status ( Must be active before buying )
+        if (!TravelStatus.ACTIVE.equals(travel.getTravelStatus())) {
+            throw new RuntimeException("Travel Status must be active for to buy ticket");
+        }
         // Check Requirements
         checkRequirements(buyer, travel, passengerRequestList);
         // TODO: Payment

@@ -1,6 +1,7 @@
 package com.erenduzova.ticketary.dto.model.response;
 
 import com.erenduzova.ticketary.entity.enums.City;
+import com.erenduzova.ticketary.entity.enums.TravelStatus;
 import com.erenduzova.ticketary.entity.enums.VehicleType;
 
 import java.time.LocalDateTime;
@@ -12,6 +13,7 @@ public class TravelResponse {
     private City toCity;
     private long fareCents;
     private LocalDateTime travelDate;
+    private TravelStatus travelStatus;
 
     public VehicleType getVehicleType() {
         return vehicleType;
@@ -51,5 +53,13 @@ public class TravelResponse {
 
     public void setTravelDate(LocalDateTime travelDate) {
         this.travelDate = travelDate;
+    }
+
+    public TravelStatus getTravelStatus() {
+        return travelStatus;
+    }
+
+    public void setTravelStatus(TravelStatus travelStatus) {
+        this.travelStatus = travelStatus;
     }
 }
