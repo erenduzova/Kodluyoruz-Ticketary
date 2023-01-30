@@ -30,7 +30,6 @@ public class TicketController {
     }
 
     // TODO: Seat Number returns faulty ( all order gets same seat number )
-    // TODO: check travel in corporate users buy requirement for max 20 ticket
     // Create Tickets
     @PostMapping(value = "/{buyerId}/{travelId}")
     public ResponseEntity<List<TicketResponse>> createTickets(@PathVariable Long buyerId,

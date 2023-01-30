@@ -99,7 +99,7 @@ public class TicketService {
                 throw new FailedRequirementException("Individual user passenger limit for travel is: " + INDIVIDUAL_TRAVEL_LIMIT);
             }
         } else {
-            if (!limitCorporateTravel(passengerRequestList)) {
+            if (!limitCorporateTravel(passengerRequestList, buyer.getId(), travel.getId())) {
                 throw new FailedRequirementException("Corporate user ticket limit for a travel is: " + CORPORATE_TRAVEL_LIMIT);
             }
         }
@@ -121,8 +121,10 @@ public class TicketService {
     }
 
     // CORPORATE user can buy max 20 ticket for same travel
-    public boolean limitCorporateTravel(List<PassengerRequest> passengerRequestList) {
-        return passengerRequestList.size() <= CORPORATE_TRAVEL_LIMIT;
+    public boolean limitCorporateTravel(List<PassengerRequest> passengerRequestList, Long buyerId, Long travelId) {
+        long boughtTicketCount = getBoughtTicketsByUserIdAndTravelId(buyerId, travelId).size();
+        long buyerLimit = CORPORATE_TRAVEL_LIMIT - boughtTicketCount;
+        return passengerRequestList.size() <= buyerLimit;
     }
 
 }
