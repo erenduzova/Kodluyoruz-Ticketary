@@ -5,6 +5,7 @@ import com.erenduzova.ticketary.dto.model.request.LoginRequest;
 import com.erenduzova.ticketary.dto.model.request.UserRequest;
 import com.erenduzova.ticketary.dto.model.response.UserResponse;
 import com.erenduzova.ticketary.entity.User;
+import com.erenduzova.ticketary.exception.UserAlreadyExistException;
 import com.erenduzova.ticketary.exception.UserNotFoundException;
 import com.erenduzova.ticketary.repository.UserRepository;
 import com.erenduzova.ticketary.util.PasswordUtil;
@@ -27,6 +28,7 @@ public class UserService {
     // Create And Save New User
     // TODO: Send mail after save
     public UserResponse create(UserRequest userRequest) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        registeredUserControl(userRequest);
         String hashedPassword = PasswordUtil.hashPassword(userRequest.getPassword());
         User newUser = userConverter.convert(userRequest, hashedPassword);
         userRepository.save(newUser);
@@ -60,6 +62,13 @@ public class UserService {
     // Get UserResponse By Id
     public UserResponse getResponseById(Long userId) {
         return userConverter.convert(findById(userId));
+    }
+
+    // Check Email Uniqueness Before Creating User
+    private void registeredUserControl(UserRequest userRequest) {
+        if (userRepository.findByEmail(userRequest.getEmail()).isPresent()) {
+            throw new UserAlreadyExistException("User already registered with this email: " + userRequest.getEmail());
+        }
     }
 
 }

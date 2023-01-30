@@ -20,7 +20,6 @@ public class UserController {
     private UserService userService;
 
     // Create User
-    // TODO: Add uniqueness control ( email )
     // TODO: Send mail after save
     @PostMapping
     public ResponseEntity<UserResponse> create(@RequestBody UserRequest userRequest) throws NoSuchAlgorithmException, InvalidKeySpecException {
