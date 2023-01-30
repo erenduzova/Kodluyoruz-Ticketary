@@ -75,5 +75,4 @@ public class TravelController {
 
     // TODO: Add Search Travel By DateTime
     // TODO: Make Travel Status Completed if it's time passed
-    // TODO: StackOverFlow Exception in admin endpoints after buying tickets ( null )
 }

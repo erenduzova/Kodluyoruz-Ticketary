@@ -6,6 +6,7 @@ import com.erenduzova.ticketary.dto.model.response.TravelResponse;
 import com.erenduzova.ticketary.entity.Travel;
 import com.erenduzova.ticketary.entity.enums.TravelStatus;
 import com.erenduzova.ticketary.entity.enums.VehicleType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -13,6 +14,9 @@ import java.util.List;
 
 @Component
 public class TravelConverter {
+
+    @Autowired
+    private TicketConverter ticketConverter;
 
     public Travel convert(TravelRequest travelRequest) {
         Travel travel = new Travel();
@@ -50,7 +54,7 @@ public class TravelConverter {
         adminTravelResponse.setFromCity(travel.getFromCity());
         adminTravelResponse.setToCity(travel.getToCity());
         adminTravelResponse.setCapacity(travel.getCapacity());
-        adminTravelResponse.setSoldTickets(travel.getSoldTickets());
+        adminTravelResponse.setSoldTickets(ticketConverter.convert(travel.getSoldTickets()));
         adminTravelResponse.setSoldTicketsCount(travel.getSoldTickets().size());
         adminTravelResponse.setFareCents(travel.getFareCents());
         adminTravelResponse.setTotalIncome(findTotalIncome(travel.getFareCents(), travel.getSoldTickets().size()));

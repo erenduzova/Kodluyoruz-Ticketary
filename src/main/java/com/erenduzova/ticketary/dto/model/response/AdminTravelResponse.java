@@ -1,6 +1,5 @@
 package com.erenduzova.ticketary.dto.model.response;
 
-import com.erenduzova.ticketary.entity.Ticket;
 import com.erenduzova.ticketary.entity.enums.City;
 import com.erenduzova.ticketary.entity.enums.TravelStatus;
 import com.erenduzova.ticketary.entity.enums.VehicleType;
@@ -16,7 +15,7 @@ public class AdminTravelResponse {
     private City fromCity;
     private City toCity;
     private int capacity;
-    private List<Ticket> soldTickets;
+    private List<TicketResponse> soldTickets;
     private long soldTicketsCount;
     private long fareCents;
     private BigDecimal totalIncome;
@@ -63,11 +62,11 @@ public class AdminTravelResponse {
         this.capacity = capacity;
     }
 
-    public List<Ticket> getSoldTickets() {
+    public List<TicketResponse> getSoldTickets() {
         return soldTickets;
     }
 
-    public void setSoldTickets(List<Ticket> soldTickets) {
+    public void setSoldTickets(List<TicketResponse> soldTickets) {
         this.soldTickets = soldTickets;
     }
 
