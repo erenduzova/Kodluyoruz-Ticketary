@@ -13,6 +13,7 @@ import com.erenduzova.ticketary.repository.TravelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -96,5 +97,10 @@ public class TravelService {
     // Get Travels By Vehicle Type
     public List<TravelResponse> searchByVehicleType(VehicleType searchedVehicle) {
         return travelConverter.convert(getTravelsByVehicleType(searchedVehicle));
+    }
+
+    // Get Travels By Date Time
+    public List<TravelResponse> searchByDateTime(LocalDateTime searchedDateTime) {
+        return travelConverter.convert(travelRepository.findAllByTravelDate(searchedDateTime));
     }
 }

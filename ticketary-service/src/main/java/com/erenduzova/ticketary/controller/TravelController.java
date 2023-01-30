@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -73,6 +74,10 @@ public class TravelController {
         return ResponseEntity.ok(travelService.searchByVehicleType(VehicleType.valueOf(vehicleType)));
     }
 
-    // TODO: Add Search Travel By DateTime
+    // Search Travel By DateTime
+    @GetMapping(value = "/search/time/{dateTime}")
+    public ResponseEntity<List<TravelResponse>> searchByDateTime(@PathVariable LocalDateTime dateTime) {
+        return ResponseEntity.ok(travelService.searchByDateTime(dateTime));
+    }
     // TODO: Make Travel Status Completed if it's time passed
 }
