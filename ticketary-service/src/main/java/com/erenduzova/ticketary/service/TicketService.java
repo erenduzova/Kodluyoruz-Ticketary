@@ -22,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 public class TicketService {
@@ -47,6 +49,8 @@ public class TicketService {
 
     @Autowired
     private PaymentServiceClient paymentServiceClient;
+
+    private final Logger logger = Logger.getLogger(TicketService.class.getName());
 
     // Create Ticket
     public Ticket create(TicketRequest ticketRequest) {
@@ -85,6 +89,7 @@ public class TicketService {
         User buyer = userService.findById(buyerId);
         Travel travel = travelService.getTravelById(travelId);
         if (!TravelStatus.ACTIVE.equals(travel.getTravelStatus())) {
+            logger.log(Level.WARNING, "[createTickets] - travel status is not active: {0}", travel.getTravelStatus());
             throw new TicketaryServiceException("Travel Status must be active for to buy tickets");
         }
         // Check Requirements
@@ -92,6 +97,7 @@ public class TicketService {
         // Do Payment
         PaymentResponse paymentResponse = paymentServiceClient.makePayment(createPaymentRequest(buyer.getAccountNumber(), travel.getFareCents(), passengerRequestList.size()));
         if (PaymentStatus.FAILED.equals(paymentResponse.getPaymentStatus())) {
+            logger.log(Level.WARNING, "[createTickets] - payment failed: {0}", paymentResponse.getPaymentStatus());
             throw new PaymentFailedException("Payment Failed!");
         }
         // Get or create passengers from passenger requests
@@ -113,13 +119,16 @@ public class TicketService {
     private void checkRequirements(User buyer, Travel travel, List<PassengerRequest> passengerRequestList) {
         if (UserType.INDIVIDUAL.equals(buyer.getType())) {
             if (!limitIndividualOrderMale(passengerRequestList)) {
+                logger.log(Level.INFO, "[checkRequirements] - individual user male limit in 1 order exceed: {0}", INDIVIDUAL_ORDER_LIMIT_MALE);
                 throw new TicketaryServiceException("Individual user male passenger limit for order is: " + INDIVIDUAL_ORDER_LIMIT_MALE);
             }
             if (!limitIndividualTravel(passengerRequestList, buyer.getId(), travel.getId())) {
+                logger.log(Level.INFO, "[checkRequirements] - individual user limit exceed: {0}", INDIVIDUAL_TRAVEL_LIMIT);
                 throw new TicketaryServiceException("Individual user passenger limit for travel is: " + INDIVIDUAL_TRAVEL_LIMIT);
             }
         } else {
             if (!limitCorporateTravel(passengerRequestList, buyer.getId(), travel.getId())) {
+                logger.log(Level.INFO, "[checkRequirements] - corporate user limit exceed: {0}", CORPORATE_TRAVEL_LIMIT);
                 throw new TicketaryServiceException("Corporate user ticket limit for a travel is: " + CORPORATE_TRAVEL_LIMIT);
             }
         }

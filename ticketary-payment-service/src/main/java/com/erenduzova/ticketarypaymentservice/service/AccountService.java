@@ -9,6 +9,9 @@ import com.erenduzova.ticketarypaymentservice.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 @Service
 public class AccountService {
 
@@ -18,10 +21,13 @@ public class AccountService {
     @Autowired
     private AccountConverter accountConverter;
 
+    private final Logger logger = Logger.getLogger(AccountService.class.getName());
+
     // Create Account
     public AccountResponse create(AccountRequest accountRequest) {
         Account newAccount = accountConverter.convert(accountRequest);
         accountRepository.save(newAccount);
+        logger.log(Level.INFO, "[create] - account created: {0}", newAccount.getId());
         return accountConverter.convert(newAccount);
     }
 

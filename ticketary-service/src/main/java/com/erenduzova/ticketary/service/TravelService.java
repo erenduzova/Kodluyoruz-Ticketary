@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 @Service
@@ -34,6 +36,8 @@ public class TravelService {
 
     @Autowired
     private PaymentServiceClient paymentServiceClient;
+
+    private final Logger logger = Logger.getLogger(TravelService.class.getName());
 
     // Create, add new travel
     public TravelResponse create(TravelRequest travelRequest) {
@@ -87,6 +91,7 @@ public class TravelService {
     public AdminTravelResponse cancel(Long travelId) {
         Travel travel = getTravelById(travelId);
         if (!TravelStatus.ACTIVE.equals(travel.getTravelStatus())) {
+            logger.log(Level.WARNING, "[cancel] - travel cancellation failed: {0}", travel.getTravelStatus());
             throw new TicketaryServiceException("Travel must be in active status to cancel.");
         }
         travel.setTravelStatus(TravelStatus.CANCELLED);
@@ -101,6 +106,7 @@ public class TravelService {
             PaymentRequest paymentRequest = new PaymentRequest(ticket.getUser().getAccountNumber(), -ticket.getTravel().getFareCents());
             PaymentResponse paymentResponse = paymentServiceClient.makePayment(paymentRequest);
             if (PaymentStatus.FAILED.equals(paymentResponse.getPaymentStatus())) {
+                logger.log(Level.WARNING, "[returnMoney] - payment failed: {0}", paymentResponse.getPaymentStatus());
                 throw new PaymentFailedException("Payment Failed!");
             }
         });

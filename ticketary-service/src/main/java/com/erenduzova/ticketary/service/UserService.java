@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 public class UserService {
@@ -30,6 +32,8 @@ public class UserService {
     @Autowired
     private PaymentServiceClient paymentServiceClient;
 
+    private final Logger logger = Logger.getLogger(UserService.class.getName());
+
     // Create And Save New User
     // TODO: Send mail after save
     public UserResponse create(UserRequest userRequest) throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -37,6 +41,7 @@ public class UserService {
         String hashedPassword = PasswordUtil.hashPassword(userRequest.getPassword());
         User newUser = userConverter.convert(userRequest, hashedPassword);
         userRepository.save(newUser);
+        logger.log(Level.INFO, "[create] - user created: {0}", newUser.getId());
         AccountResponse accountResponse = paymentServiceClient.create(new AccountRequest(userRequest.getAccountNumber()));
         return userConverter.convert(newUser);
     }
