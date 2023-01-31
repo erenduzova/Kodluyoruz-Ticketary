@@ -1,5 +1,8 @@
 package com.erenduzova.ticketary.service;
 
+import com.erenduzova.ticketary.client.PaymentServiceClient;
+import com.erenduzova.ticketary.client.model.request.AccountRequest;
+import com.erenduzova.ticketary.client.model.response.AccountResponse;
 import com.erenduzova.ticketary.dto.converter.UserConverter;
 import com.erenduzova.ticketary.dto.model.request.LoginRequest;
 import com.erenduzova.ticketary.dto.model.request.UserRequest;
@@ -25,6 +28,9 @@ public class UserService {
     @Autowired
     private UserConverter userConverter;
 
+    @Autowired
+    private PaymentServiceClient paymentServiceClient;
+
     // Create And Save New User
     // TODO: Send mail after save
     public UserResponse create(UserRequest userRequest) throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -32,6 +38,7 @@ public class UserService {
         String hashedPassword = PasswordUtil.hashPassword(userRequest.getPassword());
         User newUser = userConverter.convert(userRequest, hashedPassword);
         userRepository.save(newUser);
+        AccountResponse accountResponse = paymentServiceClient.create(new AccountRequest(userRequest.getAccountNumber()));
         return userConverter.convert(newUser);
     }
 

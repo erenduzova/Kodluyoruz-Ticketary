@@ -17,6 +17,7 @@ public class UserResponse {
     private UserType type;
     private List<TicketResponse> boughtTickets;
     private LocalDateTime registrationDate;
+    private long accountNumber;
 
     public Long getId() {
         return id;
@@ -88,5 +89,13 @@ public class UserResponse {
 
     public void setRegistrationDate(LocalDateTime registrationDate) {
         this.registrationDate = registrationDate;
+    }
+
+    public long getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(long accountNumber) {
+        this.accountNumber = accountNumber;
     }
 }

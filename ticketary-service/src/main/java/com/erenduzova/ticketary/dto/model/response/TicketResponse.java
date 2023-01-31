@@ -5,7 +5,6 @@ public class TicketResponse {
     private Long id;
     private PassengerTicketResponse passengerTicketResponse;
     private TravelResponse travelResponse;
-    private int seatNumber;
 
     public Long getId() {
         return id;
@@ -31,11 +30,4 @@ public class TicketResponse {
         this.travelResponse = travelResponse;
     }
 
-    public int getSeatNumber() {
-        return seatNumber;
-    }
-
-    public void setSeatNumber(int seatNumber) {
-        this.seatNumber = seatNumber;
-    }
 }

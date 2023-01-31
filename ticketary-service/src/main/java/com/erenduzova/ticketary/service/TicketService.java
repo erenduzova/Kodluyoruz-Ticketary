@@ -1,5 +1,9 @@
 package com.erenduzova.ticketary.service;
 
+import com.erenduzova.ticketary.client.PaymentServiceClient;
+import com.erenduzova.ticketary.client.model.enums.PaymentStatus;
+import com.erenduzova.ticketary.client.model.request.PaymentRequest;
+import com.erenduzova.ticketary.client.model.response.PaymentResponse;
 import com.erenduzova.ticketary.dto.converter.TicketConverter;
 import com.erenduzova.ticketary.dto.model.request.PassengerRequest;
 import com.erenduzova.ticketary.dto.model.request.TicketRequest;
@@ -39,6 +43,9 @@ public class TicketService {
 
     @Autowired
     private PassengerService passengerService;
+
+    @Autowired
+    private PaymentServiceClient paymentServiceClient;
 
     // Create Ticket
     public Ticket create(TicketRequest ticketRequest) {
@@ -81,8 +88,11 @@ public class TicketService {
         }
         // Check Requirements
         checkRequirements(buyer, travel, passengerRequestList);
-        // TODO: Payment
-
+        // Do Payment
+        PaymentResponse paymentResponse = paymentServiceClient.makePayment(createPaymentRequest(buyer.getAccountNumber(), travel.getFareCents(), passengerRequestList.size()));
+        if (PaymentStatus.FAILED.equals(paymentResponse.getPaymentStatus())) {
+            throw new RuntimeException("Payment Failed!");
+        }
         // Get or create passengers from passenger requests
         List<Passenger> passengerList = passengerService.getOrCreatePassengers(passengerRequestList);
         // Create ticket request from passenger
@@ -90,6 +100,12 @@ public class TicketService {
         // Create ticket from ticket request and save the ticket
         List<Ticket> ticketList = ticketRequestList.stream().map(this::create).toList();
         return ticketConverter.convert(ticketList);
+    }
+
+    // Create PaymentRequest
+    private PaymentRequest createPaymentRequest(long buyerAccountNumber, long fareCents, int ticketCount) {
+        long totalFare = fareCents * ticketCount;
+        return new PaymentRequest(buyerAccountNumber, totalFare);
     }
 
     // Check requirements if anything fails throw FailedRequirementException

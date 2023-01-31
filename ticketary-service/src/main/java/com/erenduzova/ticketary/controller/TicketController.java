@@ -30,6 +30,7 @@ public class TicketController {
     }
 
     // Create Tickets
+    // TODO: Send tickets via sms to passengers
     @PostMapping(value = "/{buyerId}/{travelId}")
     public ResponseEntity<List<TicketResponse>> createTickets(@PathVariable Long buyerId,
                                                               @PathVariable Long travelId,

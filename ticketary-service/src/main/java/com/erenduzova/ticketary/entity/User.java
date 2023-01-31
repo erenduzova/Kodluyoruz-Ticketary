@@ -19,6 +19,8 @@ public class User {
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
+    @Column(name = "account_number")
+    private long accountNumber;
     @Column(name = "email")
     private String email;
     @Column(name = "phone")
@@ -37,9 +39,10 @@ public class User {
     public User() {
     }
 
-    public User(String firstName, String lastName, String email, String phone, String password, Gender gender, UserType type) {
+    public User(String firstName, String lastName, long accountNumber,String email, String phone, String password, Gender gender, UserType type) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.accountNumber = accountNumber;
         this.email = email;
         this.phone = phone;
         this.password = password;
@@ -69,6 +72,14 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public long getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(long accountNumber) {
+        this.accountNumber = accountNumber;
     }
 
     public String getEmail() {

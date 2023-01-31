@@ -54,7 +54,6 @@ public class TravelController {
     }
 
     // Cancel Travel
-    // TODO: Return money for canceled travels
     @PutMapping(value = "/{travelId}/cancel")
     public ResponseEntity<AdminTravelResponse> cancelTravel(@PathVariable Long travelId) {
         return ResponseEntity.ok(travelService.cancel(travelId));

@@ -11,6 +11,7 @@ public class UserRequest {
     private String password;
     private Gender gender;
     private UserType type;
+    private long accountNumber;
 
     public String getFirstName() {
         return firstName;
@@ -66,5 +67,13 @@ public class UserRequest {
 
     public void setType(UserType type) {
         this.type = type;
+    }
+
+    public long getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(long accountNumber) {
+        this.accountNumber = accountNumber;
     }
 }

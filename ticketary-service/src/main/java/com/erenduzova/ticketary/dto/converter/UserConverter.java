@@ -26,6 +26,7 @@ public class UserConverter {
         userResponse.setType(user.getType());
         userResponse.setBoughtTickets(ticketConverter.convert(user.getBoughtTickets()));
         userResponse.setRegistrationDate(user.getRegistrationDate());
+        userResponse.setAccountNumber(user.getAccountNumber());
         return userResponse;
     }
 
@@ -41,6 +42,7 @@ public class UserConverter {
         user.setType(userRequest.getType());
         user.setBoughtTickets(List.of());
         user.setRegistrationDate(LocalDateTime.now());
+        user.setAccountNumber(userRequest.getAccountNumber());
         return user;
     }
 

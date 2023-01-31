@@ -1,9 +1,12 @@
 package com.erenduzova.ticketary.service;
 
+import com.erenduzova.ticketary.client.PaymentServiceClient;
+import com.erenduzova.ticketary.client.model.request.PaymentRequest;
 import com.erenduzova.ticketary.dto.converter.TravelConverter;
 import com.erenduzova.ticketary.dto.model.request.TravelRequest;
 import com.erenduzova.ticketary.dto.model.response.AdminTravelResponse;
 import com.erenduzova.ticketary.dto.model.response.TravelResponse;
+import com.erenduzova.ticketary.entity.Ticket;
 import com.erenduzova.ticketary.entity.Travel;
 import com.erenduzova.ticketary.entity.enums.City;
 import com.erenduzova.ticketary.entity.enums.TravelStatus;
@@ -25,6 +28,9 @@ public class TravelService {
 
     @Autowired
     private TravelConverter travelConverter;
+
+    @Autowired
+    private PaymentServiceClient paymentServiceClient;
 
     // Create, add new travel
     public TravelResponse create(TravelRequest travelRequest) {
@@ -75,7 +81,6 @@ public class TravelService {
     }
 
     // Cancel travel
-    // TODO: If cancelled return money.
     public AdminTravelResponse cancel(Long travelId) {
         Travel travel = getTravelById(travelId);
         if (!TravelStatus.ACTIVE.equals(travel.getTravelStatus())) {
@@ -83,7 +88,13 @@ public class TravelService {
         }
         travel.setTravelStatus(TravelStatus.CANCELLED);
         travelRepository.save(travel);
+        returnMoney(travel.getSoldTickets());
         return travelConverter.convertAdmin(travel);
+    }
+
+    // Return money of the canceled travel
+    private void returnMoney(List<Ticket> soldTickets) {
+        soldTickets.forEach(ticket -> paymentServiceClient.makePayment(new PaymentRequest(ticket.getUser().getAccountNumber(), -ticket.getTravel().getFareCents())));
     }
 
     // Get Travels By City
