@@ -15,7 +15,8 @@ import com.erenduzova.ticketary.entity.User;
 import com.erenduzova.ticketary.entity.enums.Gender;
 import com.erenduzova.ticketary.entity.enums.TravelStatus;
 import com.erenduzova.ticketary.entity.enums.UserType;
-import com.erenduzova.ticketary.exception.FailedRequirementException;
+import com.erenduzova.ticketary.exception.PaymentFailedException;
+import com.erenduzova.ticketary.exception.TicketaryServiceException;
 import com.erenduzova.ticketary.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,13 +66,13 @@ public class TicketService {
         return ticketConverter.convert(buyer.getBoughtTickets());
     }
 
-    // Get User's All Bought Tickets
+    // Get User's All Bought Tickets By userId
     public List<Ticket> getBoughtTicketsByUserId(Long buyerId) {
         User buyer = userService.findById(buyerId);
         return buyer.getBoughtTickets();
     }
 
-    // Get User's All Bought Tickets
+    // Get User's All Bought Tickets By userId and travelId
     public List<Ticket> getBoughtTicketsByUserIdAndTravelId(Long buyerId, Long travelId) {
         User buyer = userService.findById(buyerId);
         Travel travel = travelService.getTravelById(travelId);
@@ -84,14 +85,14 @@ public class TicketService {
         User buyer = userService.findById(buyerId);
         Travel travel = travelService.getTravelById(travelId);
         if (!TravelStatus.ACTIVE.equals(travel.getTravelStatus())) {
-            throw new RuntimeException("Travel Status must be active for to buy ticket");
+            throw new TicketaryServiceException("Travel Status must be active for to buy tickets");
         }
         // Check Requirements
         checkRequirements(buyer, travel, passengerRequestList);
         // Do Payment
         PaymentResponse paymentResponse = paymentServiceClient.makePayment(createPaymentRequest(buyer.getAccountNumber(), travel.getFareCents(), passengerRequestList.size()));
         if (PaymentStatus.FAILED.equals(paymentResponse.getPaymentStatus())) {
-            throw new RuntimeException("Payment Failed!");
+            throw new PaymentFailedException("Payment Failed!");
         }
         // Get or create passengers from passenger requests
         List<Passenger> passengerList = passengerService.getOrCreatePassengers(passengerRequestList);
@@ -108,18 +109,18 @@ public class TicketService {
         return new PaymentRequest(buyerAccountNumber, totalFare);
     }
 
-    // Check requirements if anything fails throw FailedRequirementException
+    // Check requirements
     private void checkRequirements(User buyer, Travel travel, List<PassengerRequest> passengerRequestList) {
         if (UserType.INDIVIDUAL.equals(buyer.getType())) {
             if (!limitIndividualOrderMale(passengerRequestList)) {
-                throw new FailedRequirementException("Individual user male passenger limit for order is: " + INDIVIDUAL_ORDER_LIMIT_MALE);
+                throw new TicketaryServiceException("Individual user male passenger limit for order is: " + INDIVIDUAL_ORDER_LIMIT_MALE);
             }
             if (!limitIndividualTravel(passengerRequestList, buyer.getId(), travel.getId())) {
-                throw new FailedRequirementException("Individual user passenger limit for travel is: " + INDIVIDUAL_TRAVEL_LIMIT);
+                throw new TicketaryServiceException("Individual user passenger limit for travel is: " + INDIVIDUAL_TRAVEL_LIMIT);
             }
         } else {
             if (!limitCorporateTravel(passengerRequestList, buyer.getId(), travel.getId())) {
-                throw new FailedRequirementException("Corporate user ticket limit for a travel is: " + CORPORATE_TRAVEL_LIMIT);
+                throw new TicketaryServiceException("Corporate user ticket limit for a travel is: " + CORPORATE_TRAVEL_LIMIT);
             }
         }
     }

@@ -6,7 +6,7 @@ import com.erenduzova.ticketary.dto.model.request.TicketRequest;
 import com.erenduzova.ticketary.entity.Passenger;
 import com.erenduzova.ticketary.entity.Travel;
 import com.erenduzova.ticketary.entity.User;
-import com.erenduzova.ticketary.exception.UserNotFoundException;
+import com.erenduzova.ticketary.exception.TicketaryServiceException;
 import com.erenduzova.ticketary.repository.PassengerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,7 @@ public class PassengerService {
     // Get Passenger By Phone
     public Passenger getByPhone(String phone) {
         return passengerRepository.findByPhone(phone)
-                .orElseThrow(() -> new UserNotFoundException("Passenger not found with this phone: " + phone));
+                .orElseThrow(() -> new TicketaryServiceException("Passenger not found with this phone: " + phone));
     }
 
     // Get or create ( if not exist ) Passenger By Phone

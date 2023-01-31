@@ -8,8 +8,7 @@ import com.erenduzova.ticketary.dto.model.request.LoginRequest;
 import com.erenduzova.ticketary.dto.model.request.UserRequest;
 import com.erenduzova.ticketary.dto.model.response.UserResponse;
 import com.erenduzova.ticketary.entity.User;
-import com.erenduzova.ticketary.exception.UserAlreadyExistException;
-import com.erenduzova.ticketary.exception.UserNotFoundException;
+import com.erenduzova.ticketary.exception.TicketaryServiceException;
 import com.erenduzova.ticketary.repository.UserRepository;
 import com.erenduzova.ticketary.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,13 +56,13 @@ public class UserService {
     // Get User By Id
     public User findById(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User not found with this id: " + userId));
+                .orElseThrow(() -> new TicketaryServiceException("User not found with this id: " + userId));
     }
 
     // Get User By Email
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("User not found with this email: " + email));
+                .orElseThrow(() -> new TicketaryServiceException("User not found with this email: " + email));
     }
 
     // Get UserResponse By Id
@@ -74,7 +73,7 @@ public class UserService {
     // Check Email Uniqueness Before Creating User
     private void registeredUserControl(UserRequest userRequest) {
         if (userRepository.findByEmail(userRequest.getEmail()).isPresent()) {
-            throw new UserAlreadyExistException("User already registered with this email: " + userRequest.getEmail());
+            throw new TicketaryServiceException("User already registered with this email: " + userRequest.getEmail());
         }
     }
 

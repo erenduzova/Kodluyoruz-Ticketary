@@ -1,7 +1,9 @@
 package com.erenduzova.ticketary.service;
 
 import com.erenduzova.ticketary.client.PaymentServiceClient;
+import com.erenduzova.ticketary.client.model.enums.PaymentStatus;
 import com.erenduzova.ticketary.client.model.request.PaymentRequest;
+import com.erenduzova.ticketary.client.model.response.PaymentResponse;
 import com.erenduzova.ticketary.dto.converter.TravelConverter;
 import com.erenduzova.ticketary.dto.model.request.TravelRequest;
 import com.erenduzova.ticketary.dto.model.response.AdminTravelResponse;
@@ -11,7 +13,8 @@ import com.erenduzova.ticketary.entity.Travel;
 import com.erenduzova.ticketary.entity.enums.City;
 import com.erenduzova.ticketary.entity.enums.TravelStatus;
 import com.erenduzova.ticketary.entity.enums.VehicleType;
-import com.erenduzova.ticketary.exception.TravelNotFoundException;
+import com.erenduzova.ticketary.exception.PaymentFailedException;
+import com.erenduzova.ticketary.exception.TicketaryServiceException;
 import com.erenduzova.ticketary.repository.TravelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,7 +45,7 @@ public class TravelService {
     // Get Travel By Id
     public Travel getTravelById(Long travelId) {
         return travelRepository.findById(travelId)
-                .orElseThrow(() -> new TravelNotFoundException("Travel not found with this id: " + travelId));
+                .orElseThrow(() -> new TicketaryServiceException("Travel not found with this id: " + travelId));
     }
 
     // Get Travels By toCity
@@ -84,7 +87,7 @@ public class TravelService {
     public AdminTravelResponse cancel(Long travelId) {
         Travel travel = getTravelById(travelId);
         if (!TravelStatus.ACTIVE.equals(travel.getTravelStatus())) {
-            throw new RuntimeException("Travel must be active to cancel.");
+            throw new TicketaryServiceException("Travel must be in active status to cancel.");
         }
         travel.setTravelStatus(TravelStatus.CANCELLED);
         travelRepository.save(travel);
@@ -94,7 +97,13 @@ public class TravelService {
 
     // Return money of the canceled travel
     private void returnMoney(List<Ticket> soldTickets) {
-        soldTickets.forEach(ticket -> paymentServiceClient.makePayment(new PaymentRequest(ticket.getUser().getAccountNumber(), -ticket.getTravel().getFareCents())));
+        soldTickets.forEach(ticket -> {
+            PaymentRequest paymentRequest = new PaymentRequest(ticket.getUser().getAccountNumber(), -ticket.getTravel().getFareCents());
+            PaymentResponse paymentResponse = paymentServiceClient.makePayment(paymentRequest);
+            if (PaymentStatus.FAILED.equals(paymentResponse.getPaymentStatus())) {
+                throw new PaymentFailedException("Payment Failed!");
+            }
+        });
     }
 
     // Get Travels By City

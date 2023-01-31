@@ -4,6 +4,7 @@ import com.erenduzova.ticketarypaymentservice.dto.converter.AccountConverter;
 import com.erenduzova.ticketarypaymentservice.dto.model.request.AccountRequest;
 import com.erenduzova.ticketarypaymentservice.dto.model.response.AccountResponse;
 import com.erenduzova.ticketarypaymentservice.entity.Account;
+import com.erenduzova.ticketarypaymentservice.exception.TicketaryPaymentServiceException;
 import com.erenduzova.ticketarypaymentservice.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class AccountService {
     // Get Account By Account Number
     public Account getByAccountNumber(long accountNumber) {
         return accountRepository.findByAccountNumber(accountNumber)
-                .orElseThrow(() -> new RuntimeException("Account not found with this accountNumber: " + accountNumber));
+                .orElseThrow(() -> new TicketaryPaymentServiceException("Account not found with this accountNumber: " + accountNumber));
     }
 
     // Get AccountResponse By Account Number
