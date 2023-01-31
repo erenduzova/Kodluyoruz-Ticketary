@@ -2,7 +2,9 @@ package com.erenduzova.ticketary.service;
 
 import com.erenduzova.ticketary.client.PaymentServiceClient;
 import com.erenduzova.ticketary.client.model.request.AccountRequest;
+import com.erenduzova.ticketary.client.model.request.NotificationRequest;
 import com.erenduzova.ticketary.client.model.response.AccountResponse;
+import com.erenduzova.ticketary.configuration.RabbitMQConfiguration;
 import com.erenduzova.ticketary.dto.converter.UserConverter;
 import com.erenduzova.ticketary.dto.model.request.LoginRequest;
 import com.erenduzova.ticketary.dto.model.request.UserRequest;
@@ -11,6 +13,7 @@ import com.erenduzova.ticketary.entity.User;
 import com.erenduzova.ticketary.exception.TicketaryServiceException;
 import com.erenduzova.ticketary.repository.UserRepository;
 import com.erenduzova.ticketary.util.PasswordUtil;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,10 +35,15 @@ public class UserService {
     @Autowired
     private PaymentServiceClient paymentServiceClient;
 
+    @Autowired
+    private AmqpTemplate rabbitTemplate;
+
+    @Autowired
+    private RabbitMQConfiguration rabbitMQConfiguration;
+
     private final Logger logger = Logger.getLogger(UserService.class.getName());
 
     // Create And Save New User
-    // TODO: Send mail after save
     public UserResponse create(UserRequest userRequest) throws NoSuchAlgorithmException, InvalidKeySpecException {
         registeredUserControl(userRequest);
         String hashedPassword = PasswordUtil.hashPassword(userRequest.getPassword());
@@ -43,7 +51,10 @@ public class UserService {
         userRepository.save(newUser);
         logger.log(Level.INFO, "[create] - user created: {0}", newUser.getId());
         AccountResponse accountResponse = paymentServiceClient.create(new AccountRequest(userRequest.getAccountNumber()));
-        return userConverter.convert(newUser);
+        UserResponse userResponse = userConverter.convert(newUser);
+        NotificationRequest notificationRequest = new NotificationRequest("New User Registered " + userResponse.toString(), newUser.getEmail());
+        rabbitTemplate.convertAndSend(rabbitMQConfiguration.getExchange(), rabbitMQConfiguration.getQueueName() , notificationRequest);
+        return userResponse;
     }
 
     // User Login

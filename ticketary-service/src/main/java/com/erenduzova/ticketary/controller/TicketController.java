@@ -17,7 +17,6 @@ public class TicketController {
     private TicketService ticketService;
 
     // Get All Tickets
-    // TODO: Add Admin control
     @GetMapping
     public ResponseEntity<List<TicketResponse>> getAll() {
         return ResponseEntity.ok(ticketService.getAll());
@@ -30,7 +29,6 @@ public class TicketController {
     }
 
     // Create Tickets
-    // TODO: Send tickets via sms to passengers
     @PostMapping(value = "/{buyerId}/{travelId}")
     public ResponseEntity<List<TicketResponse>> createTickets(@PathVariable Long buyerId,
                                                               @PathVariable Long travelId,

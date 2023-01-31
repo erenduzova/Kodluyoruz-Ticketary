@@ -98,4 +98,20 @@ public class UserResponse {
     public void setAccountNumber(long accountNumber) {
         this.accountNumber = accountNumber;
     }
+
+    @Override
+    public String toString() {
+        return "UserResponse{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", gender=" + gender +
+                ", type=" + type +
+                ", boughtTickets=" + boughtTickets +
+                ", registrationDate=" + registrationDate +
+                ", accountNumber=" + accountNumber +
+                '}';
+    }
 }

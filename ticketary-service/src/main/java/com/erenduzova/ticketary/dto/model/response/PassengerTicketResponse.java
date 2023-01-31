@@ -7,6 +7,7 @@ public class PassengerTicketResponse {
     private String firstName;
     private String lastName;
     private Gender gender;
+    private String phone;
 
     public String getFirstName() {
         return firstName;
@@ -31,4 +32,13 @@ public class PassengerTicketResponse {
     public void setGender(Gender gender) {
         this.gender = gender;
     }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
 }

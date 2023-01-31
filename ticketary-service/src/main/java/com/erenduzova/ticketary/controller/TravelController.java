@@ -20,8 +20,6 @@ public class TravelController {
     @Autowired
     private TravelService travelService;
 
-    // TODO: Make Role Based Auth. ( Admin And Normal Users )
-
     // Create Travel
     @PostMapping
     public ResponseEntity<TravelResponse> create(@RequestBody TravelRequest travelRequest) {
@@ -60,7 +58,6 @@ public class TravelController {
     }
 
     // Search Travel By City
-    // TODO : Find better way to format string to enum and use other necessary places
     @GetMapping(value = "/search/city/{cityName}")
     public ResponseEntity<List<TravelResponse>> searchByCity(@PathVariable String cityName) {
         String searchedCity = cityName.replaceAll("\\s", "").toUpperCase();
@@ -78,5 +75,4 @@ public class TravelController {
     public ResponseEntity<List<TravelResponse>> searchByDateTime(@PathVariable LocalDateTime dateTime) {
         return ResponseEntity.ok(travelService.searchByDateTime(dateTime));
     }
-    // TODO: Make Travel Status Completed if it's time passed
 }

@@ -56,6 +56,7 @@ public class PassengerConverter {
         passengerTicketResponse.setFirstName(passenger.getFirstName());
         passengerTicketResponse.setLastName(passenger.getLastName());
         passengerTicketResponse.setGender(passenger.getGender());
+        passengerTicketResponse.setPhone(passenger.getPhone());
         return passengerTicketResponse;
     }
 

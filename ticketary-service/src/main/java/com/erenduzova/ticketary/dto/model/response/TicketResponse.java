@@ -30,4 +30,10 @@ public class TicketResponse {
         this.travelResponse = travelResponse;
     }
 
+    @Override
+    public String toString() {
+        return "TicketResponse{" +
+                ", travelResponse=" + travelResponse +
+                '}';
+    }
 }

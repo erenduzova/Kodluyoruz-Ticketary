@@ -62,4 +62,16 @@ public class TravelResponse {
     public void setTravelStatus(TravelStatus travelStatus) {
         this.travelStatus = travelStatus;
     }
+
+    @Override
+    public String toString() {
+        return "TravelResponse{" +
+                "vehicle=" + vehicleType +
+                ", from=" + fromCity +
+                ", to=" + toCity +
+                ", fareCents=" + fareCents +
+                ", Date=" + travelDate +
+                ", Status=" + travelStatus +
+                '}';
+    }
 }

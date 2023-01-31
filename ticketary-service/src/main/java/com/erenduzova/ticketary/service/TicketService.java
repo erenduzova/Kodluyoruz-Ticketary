@@ -2,8 +2,10 @@ package com.erenduzova.ticketary.service;
 
 import com.erenduzova.ticketary.client.PaymentServiceClient;
 import com.erenduzova.ticketary.client.model.enums.PaymentStatus;
+import com.erenduzova.ticketary.client.model.request.NotificationRequest;
 import com.erenduzova.ticketary.client.model.request.PaymentRequest;
 import com.erenduzova.ticketary.client.model.response.PaymentResponse;
+import com.erenduzova.ticketary.configuration.RabbitMQConfiguration;
 import com.erenduzova.ticketary.dto.converter.TicketConverter;
 import com.erenduzova.ticketary.dto.model.request.PassengerRequest;
 import com.erenduzova.ticketary.dto.model.request.TicketRequest;
@@ -18,6 +20,7 @@ import com.erenduzova.ticketary.entity.enums.UserType;
 import com.erenduzova.ticketary.exception.PaymentFailedException;
 import com.erenduzova.ticketary.exception.TicketaryServiceException;
 import com.erenduzova.ticketary.repository.TicketRepository;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +52,12 @@ public class TicketService {
 
     @Autowired
     private PaymentServiceClient paymentServiceClient;
+
+    @Autowired
+    private AmqpTemplate rabbitTemplate;
+
+    @Autowired
+    private RabbitMQConfiguration rabbitMQConfiguration;
 
     private final Logger logger = Logger.getLogger(TicketService.class.getName());
 
@@ -106,7 +115,12 @@ public class TicketService {
         List<TicketRequest> ticketRequestList = passengerService.createTicketRequest(passengerList, buyer, travel);
         // Create ticket from ticket request and save the ticket
         List<Ticket> ticketList = ticketRequestList.stream().map(this::create).toList();
-        return ticketConverter.convert(ticketList);
+        List<TicketResponse> ticketResponseList = ticketConverter.convert(ticketList);
+        ticketResponseList.forEach(ticketResponse -> {
+            NotificationRequest notificationRequest = new NotificationRequest(ticketResponse.getPassengerTicketResponse().getFirstName() + "'s ticket" + ticketResponse.toString(), ticketResponse.getPassengerTicketResponse().getPhone());
+            rabbitTemplate.convertAndSend(rabbitMQConfiguration.getExchange(), rabbitMQConfiguration.getQueueName() , notificationRequest);
+        });
+        return ticketResponseList;
     }
 
     // Create PaymentRequest
