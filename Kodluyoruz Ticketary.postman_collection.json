@@ -1,0 +1,371 @@
+{
+	"info": {
+		"_postman_id": "99ee98a8-825c-44fd-a71c-4428d586b473",
+		"name": "Kodluyoruz Ticketary",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\": \"eren\",\r\n    \"lastName\": \"düzova\",\r\n    \"email\": \"erendz@gmail.com\",\r\n    \"phone\": \"05432354654\",\r\n    \"password\": \"qwerty\",\r\n    \"gender\": \"MALE\",\r\n    \"type\": \"INDIVIDUAL\",\r\n    \"accountNumber\": \"256341\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/users",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User By Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/users/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/users",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"erendz@gmail.com\",\r\n    \"password\": \"qwerty\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/users/login",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Travel",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vehicleType\": \"PLANE\",\r\n    \"fromCity\": \"PARIS\",\r\n    \"toCity\": \"LONDON\",\r\n    \"fareCents\": 750,\r\n    \"travelDate\": \"2023-02-25T12:30:00\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/travels",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"travels"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Travels",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/travels",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"travels"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Travels Admin",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/travels/detailed",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"travels",
+						"detailed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Travel By Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/travels/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"travels",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Travel By Id Admin",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/travels/detailed/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"travels",
+						"detailed",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cancel Travel",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/travels/1/cancel",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"travels",
+						"1",
+						"cancel"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Travels By City",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/travels/search/city/ lonD oN ",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"travels",
+						"search",
+						"city",
+						" lonD oN "
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Travels By Vehicle",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/travels/search/vehicle/PLANE",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"travels",
+						"search",
+						"vehicle",
+						"PLANE"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Buy Tickets",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"firstName\": \"Eren\",\r\n        \"lastName\": \"Düzova\",\r\n        \"phone\": \"5434923123\",\r\n        \"gender\": \"MALE\"\r\n    },\r\n    {\r\n        \"firstName\": \"Gökalp\",\r\n        \"lastName\": \"Düzova\",\r\n        \"phone\": \"5353524657\",\r\n        \"gender\": \"MALE\"\r\n    },\r\n    {\r\n        \"firstName\": \"Ceren\",\r\n        \"lastName\": \"Düzova\",\r\n        \"phone\": \"5353524645\",\r\n        \"gender\": \"FEMALE\"\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/tickets/1/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tickets",
+						"1",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User's Bought Tickets",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/tickets/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tickets",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Tickets",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/tickets",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tickets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Travels By Date",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/travels/search/time/2023-02-25T12:30:00",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"travels",
+						"search",
+						"time",
+						"2023-02-25T12:30:00"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
